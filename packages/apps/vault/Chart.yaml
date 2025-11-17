@@ -1,0 +1,12 @@
+apiVersion: v2
+name: vault
+description: Production-ready HashiCorp Vault deployment for Cozystack tenants
+home: https://www.vaultproject.io/
+icon: https://www.datocms-assets.com/2885/1620155116-favicon-192x192.png
+version: 0.1.0
+appVersion: "1.16.2"
+type: application
+dependencies:
+  - name: vault
+    version: 0.28.0
+    repository: https://helm.releases.hashicorp.com
