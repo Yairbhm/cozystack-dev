@@ -8,20 +8,193 @@ spec:
     kind: MongoDB
     openAPISchema: |
       {
+        "title": "MongoDB options",
+        "type": "object",
         "properties": {
-          "members": {
-            "default": 3,
-            "description": "Number of MongoDB members in the replica set.",
-            "type": "integer"
+          "architecture": {
+            "type": "string",
+            "enum": ["standalone", "replicaset"],
+            "default": "replicaset",
+            "description": "Deployment architecture for MongoDB."
           },
-          "name": {
+          "replicaCount": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 3,
+            "description": "Number of MongoDB replicas (replica set only)."
+          },
+          "replicaSetName": {
+            "type": "string",
             "default": "",
-            "description": "Custom name for the MongoDB replica set. Optional.",
-            "type": "string"
+            "description": "Optional replica set name; falls back to the release name."
+          },
+          "arbiter": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": false,
+                "description": "Deploy an arbiter node to break ties in the replica set."
+              }
+            }
+          },
+          "auth": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": true,
+                "description": "Enable SCRAM authentication."
+              },
+              "rootUser": {
+                "type": "string",
+                "default": "root",
+                "description": "Admin user name."
+              },
+              "rootPassword": {
+                "type": "string",
+                "default": "",
+                "description": "Admin password. Required unless an existingSecret is provided."
+              },
+              "username": {
+                "type": "string",
+                "default": "",
+                "description": "Optional application user."
+              },
+              "password": {
+                "type": "string",
+                "default": "",
+                "description": "Password for the optional application user."
+              },
+              "database": {
+                "type": "string",
+                "default": "",
+                "description": "Database granted to the optional application user."
+              },
+              "replicaSetKey": {
+                "type": "string",
+                "default": "",
+                "description": "Replica set keyfile value for intra-node authentication."
+              },
+              "existingSecret": {
+                "type": "string",
+                "default": "",
+                "description": "Secret containing mongodb-root-password and mongodb-replica-set-key keys."
+              }
+            }
+          },
+          "persistence": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": true,
+                "description": "Persist MongoDB data to volumes."
+              },
+              "size": {
+                "type": "string",
+                "default": "20Gi",
+                "description": "Volume size for each MongoDB pod."
+              },
+              "storageClass": {
+                "type": "string",
+                "default": "",
+                "description": "StorageClass to use; empty uses the cluster default."
+              },
+              "accessModes": {
+                "type": "array",
+                "items": { "type": "string" },
+                "default": ["ReadWriteOnce"],
+                "description": "PVC access modes."
+              }
+            }
+          },
+          "service": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "default": "ClusterIP",
+                "description": "Service type for exposing MongoDB."
+              },
+              "port": {
+                "type": "integer",
+                "default": 27017,
+                "description": "MongoDB service port."
+              }
+            }
+          },
+          "resources": {
+            "type": "object",
+            "properties": {
+              "requests": {
+                "type": "object",
+                "properties": {
+                  "cpu": { "type": "string", "default": "250m" },
+                  "memory": { "type": "string", "default": "512Mi" }
+                }
+              },
+              "limits": {
+                "type": "object",
+                "properties": {
+                  "cpu": { "type": "string", "default": "1000m" },
+                  "memory": { "type": "string", "default": "2Gi" }
+                }
+              }
+            },
+            "description": "Resource requests and limits for MongoDB pods."
+          },
+          "tls": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": false,
+                "description": "Enable TLS for MongoDB connections."
+              },
+              "autoGenerated": {
+                "type": "boolean",
+                "default": true,
+                "description": "Create self-signed certificates when no secret is provided."
+              },
+              "existingSecret": {
+                "type": "string",
+                "default": "",
+                "description": "TLS secret to reuse instead of generating certificates."
+              }
+            }
+          },
+          "metrics": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": true,
+                "description": "Enable MongoDB metrics exporter."
+              },
+              "serviceMonitor": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Create a ServiceMonitor for Prometheus Operator."
+                  },
+                  "namespace": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Namespace where the ServiceMonitor should live."
+                  },
+                  "interval": {
+                    "type": "string",
+                    "default": "30s",
+                    "description": "Scrape interval for the ServiceMonitor."
+                  }
+                }
+              }
+            }
           }
-        },
-        "title": "Chart Values",
-        "type": "object"
+        }
       }
     plural: mongodbs
     singular: mongodb
@@ -42,4 +215,5 @@ spec:
     description: MongoDB is a popular NoSQL database.
     tags:
       - database
-    icon: PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwLjU4NSAyMy4xODVDMjAuNTg1IDIyLjcwNiAyMC4zODUgMjIuMjk3IDIwLjA0NSAyMS45NzVDMTguMTc1IDIwLjE1NSAxNi43NDUgMTcuNDY1IDE2LjI4NSAxNS42NDVDMTYuMjc1IDE1LjYyNSAxNi4yNzUgMTUuNjA1IDE2LjI2NSAxNS41ODVDMTYuMjY1IDE1LjU3NSAxNi4yNjUgMTUuNTY1IDE2LjI2NSAxNS41NDVDMTYuMTA1IDE0LjkwNSAxNS45MDUgMTQuMjU1IDE1LjcwNSAxMy42NzVDMTQuODI1IDExLjA5NSAxNC4xNjUgOS4xNzUgMTMuNDU1IDcuNzY1QzEzLjMwNSAxNS43NDUgMTQuOTg1IDE3LjUwNSAxNy4xNjUgMTguMzM1QzE3LjMwNSAxOC4zODUgMTcuNTA1IDE4LjQ0NSAxNy43MDUgMTguNDk1TDE3LjcwNSAyMS45NzdDMjAuMjY1IDI0LjQ5NSAyMy40NTUgMjMuMzQ1IDIzLjQ1NSAyMy4zNDVMMjAuNTg1IDIzLjE4NVoiIGZpbGw9IiMwODBBNTMiLz4KPC9zdmc+
+    icon: PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAv
+c3ZnIj4KPHBhdGggZD0iTTIwLjU4NSAyMy4xODVDMjAuNTg1IDIyLjcwNiAyMC4zODUgMjIuMjk3IDIwLjA0NSAyMS45NzVDMTguMTc1IDIwLjE1NSAxNi43NDUgMTcuNDY1IDE2LjI4NSAxNS42NDVDMTYuMjc1IDE1LjYyNSAxNi4yNzUgMTUuNjA1IDE2LjI2NSAxNS41ODVDMTYuMjY1IDEuNTc1IDE2LjI2NSAxNS41NjUgMTYuMjY1IDE1LjU0NUwxNi4xMDUgMTQuOTA1IDE1LjkwNSAxNC4yNTUgMTUuNzA1IDEzLjY3NSAxNC44MjUgMTEuMDk1IDE0LjE2NSA5LjE3NSAxMy40NTUgNy43NjVDMTMuMzA1IDE1Ljc0NSAxNC45ODUgMTcuNTA1IDE3LjE2NSAxOC4zMzVDMTcuMzA1IDE4LjM4NSAxNy41MDUgMTguNDQ1IDE3LjcwNSAxOC40OTVMMTcuNzA1IDIxLjk3N0MyMC4yNjUgMjQuNDk1IDIzLjQ1NSAyMy4zNDUgMjMuNDU1IDIzLjM0NUwyMC41ODUgMjMuMTg1WiIgZmlsbD0iMDgwQTUzIi8+Cjwvc3ZnPg==
