@@ -2,9 +2,13 @@ apiVersion: cozystack.io/v1alpha1
 kind: CozystackResourceDefinition
 metadata:
   name: mongodb
+  namespace: cozy-system
 spec:
   application:
-    openAPISchema: |-
+    kind: MongoDB
+    plural: mongodbs
+    singular: mongodb
+    openAPISchema: |
       {"title":"Chart Values","type":"object","properties":{"members":{"description":"Number of MongoDB members in the replica set.","type":"integer","default":3},"name":{"description":"Custom name for the MongoDB replica set. Optional.","type":"string","default":""}}}
   release:
     prefix: mongodb-
@@ -17,6 +21,13 @@ spec:
         name: cozystack-apps
         namespace: cozy-public
   dashboard:
+    category: Database
+    singular: MongoDB
+    plural: MongoDB Databases
     description: MongoDB Community Edition - A NoSQL database for modern applications
+    tags:
+      - database
+      - nosql
+      - mongodb
     icon: PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE1LjkgMi4yYy0uNCAwLS44LjEtMS4xLjItMi41LjktNC44IDIuMy02LjcgNC4yQzQuOCA5LjkgMyAxNC40IDMgMTkuMWMwIDMuMi44IDYuMyAyLjQgOS4xLjMuNS45LjggMS41LjguNiAwIDEuMi0uMyAxLjUtLjguNi0xIDEuMS0yLjEgMS40LTMuMy4yLS42LjMtMS4zLjQtMS45IDAtLjMuMS0uNi4xLS45di0uM2MwLS4xIDAtLjIuMS0uM3YtLjFjLjMtMi44IDEuNS01LjQgMy40LTcuNC4xLS4xLjItLjIuMy0uMy4xLS4xLjItLjIuMy0uMy4xLS4xLjItLjIuMy0uMi4xLS4xLjItLjIuMy0uMmwuMy0uM2MuMS0uMS4yLS4xLjItLjIuMi0uMS4zLS4zLjUtLjQuMy0uMy43LS41IDEtLjguMy0uMi42LS40LjktLjYuMy0uMi42LS40LjktLjUuMy0uMS41LS4zLjgtLjQuMy0uMS42LS4zLjktLjQuMy0uMS42LS4yLjktLjMuMy0uMS42LS4yLjktLjIuMy0uMS42LS4xLjktLjFoLjJjLjIgMCAuNCAwIC42LjEuMyAwIC42LjEuOS4yLjMuMS42LjIuOS4zLjMuMS42LjIuOS40LjMuMS41LjMuOC40LjMuMi42LjMuOS41LjMuMi42LjQuOS42LjMuMi43LjUgMSAuOC4yLjEuMy4zLjUuNC4xLjEuMS4xLjIuMmwuMy4zYy4xLjEuMi4xLjMuMi4xLjEuMi4xLjMuMi4xLjEuMi4yLjMuMy4xLjEuMi4yLjMuMyAxLjkgMiAzLjEgNC42IDMuNCA3LjR2LjFjMCAuMSAwIC4yLjEuM3YuM2MwIC4zLjEuNi4xLjkuMS43LjIgMS4zLjQgMS45LjMgMS4yLjggMi4zIDEuNCAzLjMuMy41LjkuOCAxLjUuOC42IDAgMS4yLS4zIDEuNS0uOCAxLjYtMi44IDIuNC01LjkgMi40LTkuMSAwLTQuNy0xLjgtOS4yLTUuMS0xMi43LTEuOS0xLjktNC4yLTMuMy02LjctNC4yLS4zLS4xLS43LS4yLTEuMS0uMmgtLjJ6IiBmaWxsPSIjMTBBQTUwIi8+CjxwYXRoIGQ9Ik0xNiAyMC41Yy0uMyAwLS41LjItLjUuNXY4YzAgLjMuMi41LjUuNXMuNS0uMi41LS41di04YzAtLjMtLjItLjUtLjUtLjV6IiBmaWxsPSIjQjhDNEMyIi8+CjxwYXRoIGQ9Ik0xNiAyMC41Yy0uMyAwLS41LjItLjUuNXY4YzAgLjMuMi41LjUuNXMuNS0uMi41LS41di04YzAtLjMtLjItLjUtLjUtLjV6IiBmaWxsPSIjMTI5MjRGIi8+Cjwvc3ZnPgo=
     keysOrder: [["apiVersion"], ["appVersion"], ["kind"], ["metadata"], ["metadata", "name"], ["spec", "members"], ["spec", "name"]]
