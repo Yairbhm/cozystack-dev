@@ -1,5 +1,3 @@
 apiVersion: v2
-name: cozystack-mongodb-apps
-description: MongoDB application package for Cozystack
-type: application
-version: 0.1.0
+name: external-apps-platform
+version: 0.0.0

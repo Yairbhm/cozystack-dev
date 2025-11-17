@@ -1,36 +1,9 @@
-# Configuración para el chart de Bitnami MongoDB
-mongodb:
-  # Arquitectura: standalone o replicaset
-  architecture: standalone
-  
-  # Autenticación
-  auth:
-    enabled: true
-    rootPassword: ""  # Se generará automáticamente
-    username: ""
-    password: ""
-    database: "mydb"
-  
-  # Persistencia
-  persistence:
-    enabled: true
-    storageClass: ""  # Usa la default de tu cluster
-    size: 8Gi
-  
-  # Recursos
-  resources:
-    limits:
-      cpu: 1000m
-      memory: 1Gi
-    requests:
-      cpu: 250m
-      memory: 512Mi
-  
-  # Métricas (opcional)
-  metrics:
-    enabled: false
-  
-  # Configuración de red
-  service:
-    type: ClusterIP
-    port: 27017
+##
+## @section Common parameters
+##
+
+## @param {int} members=3 - Number of MongoDB members in the replica set.
+members: 3
+
+## @param {string} name - Custom name for the MongoDB replica set. Optional.
+name: ""
