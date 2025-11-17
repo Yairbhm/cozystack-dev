@@ -1,0 +1,11 @@
+apiVersion: v2
+name: mongodb
+description: MongoDB NoSQL Database usando Bitnami
+type: application
+version: 1.0.0
+appVersion: "8.0.11"
+
+dependencies:
+  - name: mongodb
+    version: "16.0.0"  # Usa la última versión estable
+    repository: https://charts.bitnami.com/bitnami

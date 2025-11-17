@@ -1,0 +1,3 @@
+# Configuración global para las aplicaciones
+global:
+  enabled: true
