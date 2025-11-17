@@ -1,0 +1,85 @@
+vault:
+  nameOverride: ""
+  fullnameOverride: ""
+
+  server:
+    ha:
+      enabled: true
+      replicas: 3
+      raft:
+        enabled: true
+        setNodeId: true
+        config: |-
+          ui = true
+          listener "tcp" {
+            address = "[::]:8200"
+            cluster_address = "[::]:8201"
+            tls_disable = "true"
+          }
+          storage "raft" {
+            path = "/vault/data"
+          }
+          service_registration "kubernetes" {}
+
+    dataStorage:
+      enabled: true
+      size: 20Gi
+      storageClass: ""
+      accessMode: ReadWriteOnce
+
+    auditStorage:
+      enabled: false
+      size: 10Gi
+      storageClass: ""
+      accessMode: ReadWriteOnce
+
+    service:
+      enabled: true
+      type: ClusterIP
+      port: 8200
+
+    ingress:
+      enabled: false
+      ingressClassName: ""
+      annotations: {}
+      hosts:
+        - host: vault.example.com
+          paths:
+            - path: /
+              pathType: Prefix
+      tls: []
+
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 1
+        memory: 2Gi
+
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    extraEnvironmentVars: []
+    extraVolumes: []
+    extraVolumeMounts: []
+
+  injector:
+    enabled: true
+    replicas: 1
+    webhook:
+      failurePolicy: Ignore
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+  csi:
+    enabled: false
+    driver:
+      name: secrets.csi.k8s.io
+    agent:
+      replicas: 1
