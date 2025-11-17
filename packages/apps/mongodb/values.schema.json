@@ -1,0 +1,16 @@
+{
+  "title": "Chart Values",
+  "type": "object",
+  "properties": {
+    "members": {
+      "description": "Number of MongoDB members in the replica set.",
+      "type": "integer",
+      "default": 3
+    },
+    "name": {
+      "description": "Custom name for the MongoDB replica set. Optional.",
+      "type": "string",
+      "default": ""
+    }
+  }
+}

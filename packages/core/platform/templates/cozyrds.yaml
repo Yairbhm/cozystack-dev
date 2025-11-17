@@ -1,0 +1,45 @@
+apiVersion: cozystack.io/v1alpha1
+kind: CozystackResourceDefinition
+metadata:
+  name: mongodb
+  namespace: cozy-system
+spec:
+  application:
+    kind: MongoDB
+    openAPISchema: |
+      {
+        "properties": {
+          "members": {
+            "default": 3,
+            "description": "Number of MongoDB members in the replica set.",
+            "type": "integer"
+          },
+          "name": {
+            "default": "",
+            "description": "Custom name for the MongoDB replica set. Optional.",
+            "type": "string"
+          }
+        },
+        "title": "Chart Values",
+        "type": "object"
+      }
+    plural: mongodbs
+    singular: mongodb
+  release:
+    chart:
+      name: ./packages/apps/mongodb
+      sourceRef:
+        kind: GitRepository
+        name: external-apps
+        namespace: cozy-public
+    labels:
+      cozystack.io/ui: "true"
+    prefix: mongodb-
+  dashboard:
+    category: PaaS
+    singular: MongoDB
+    plural: MongoDB
+    description: MongoDB is a popular NoSQL database.
+    tags:
+      - database
+    icon: PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwLjU4NSAyMy4xODVDMjAuNTg1IDIyLjcwNiAyMC4zODUgMjIuMjk3IDIwLjA0NSAyMS45NzVDMTguMTc1IDIwLjE1NSAxNi43NDUgMTcuNDY1IDE2LjI4NSAxNS42NDVDMTYuMjc1IDE1LjYyNSAxNi4yNzUgMTUuNjA1IDE2LjI2NSAxNS41ODVDMTYuMjY1IDE1LjU3NSAxNi4yNjUgMTUuNTY1IDE2LjI2NSAxNS41NDVDMTYuMTA1IDE0LjkwNSAxNS45MDUgMTQuMjU1IDE1LjcwNSAxMy42NzVDMTQuODI1IDExLjA5NSAxNC4xNjUgOS4xNzUgMTMuNDU1IDcuNzY1QzEzLjMwNSAxNS43NDUgMTQuOTg1IDE3LjUwNSAxNy4xNjUgMTguMzM1QzE3LjMwNSAxOC4zODUgMTcuNTA1IDE4LjQ0NSAxNy43MDUgMTguNDk1TDE3LjcwNSAyMS45NzdDMjAuMjY1IDI0LjQ5NSAyMy40NTUgMjMuMzQ1IDIzLjQ1NSAyMy4zNDVMMjAuNTg1IDIzLjE4NVoiIGZpbGw9IiMwODBBNTMiLz4KPC9zdmc+
