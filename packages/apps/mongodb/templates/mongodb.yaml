@@ -1,0 +1,47 @@
+apiVersion: mongodbcommunity.mongodb.com/v1
+kind: MongoDBCommunity
+metadata:
+  name: {{ include "mongodb.fullname" . }}
+  labels:
+    {{- include "mongodb.labels" . | nindent 4 }}
+spec:
+  members: {{ .Values.members }}
+  type: ReplicaSet
+  version: "6.0.5"
+  security:
+    authentication:
+      modes: ["SCRAM"]
+  users:
+    - name: admin
+      db: admin
+      passwordSecretRef:
+        name: {{ include "mongodb.fullname" . }}-admin-password
+      roles:
+        - name: clusterAdmin
+          db: admin
+        - name: userAdminAnyDatabase
+          db: admin
+      scramCredentialsSecretName: {{ include "mongodb.fullname" . }}-admin-scram
+  statefulSet:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: mongod
+              resources:
+                requests:
+                  cpu: 500m
+                  memory: 512Mi
+                limits:
+                  cpu: 1000m
+                  memory: 1Gi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "mongodb.fullname" . }}-admin-password
+  labels:
+    {{- include "mongodb.labels" . | nindent 4 }}
+type: Opaque
+stringData:
+  password: {{ randAlphaNum 16 | quote }}
